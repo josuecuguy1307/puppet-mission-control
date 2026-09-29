@@ -1,0 +1,68 @@
+[
+  {
+    "slug": "command",
+    "nombre": "Command",
+    "division": "Command",
+    "regimen": "caliente",
+    "asiento_fable": true,
+    "aliases": [
+      "cmd",
+      "supervisor"
+    ],
+    "asientos": [
+      {
+        "rol": "Supervisor",
+        "modelo": "Fable 5",
+        "tier": "fable",
+        "fable": true,
+        "agente": null
+      },
+      {
+        "rol": "Assistant",
+        "modelo": "qwen3:8b (specialist)",
+        "tier": "oss",
+        "agente": "cmd-assistant"
+      }
+    ]
+  },
+  {
+    "slug": "build",
+    "nombre": "Build",
+    "division": "Engineering",
+    "regimen": "caliente",
+    "aliases": [
+      "builders"
+    ],
+    "asientos": [
+      {
+        "rol": "Lead",
+        "modelo": "Opus",
+        "tier": "opus",
+        "agente": "build-lead"
+      },
+      {
+        "rol": "Constructor",
+        "modelo": "gpt-oss-120b (constructor-code)",
+        "tier": "oss",
+        "agente": "build-constructor"
+      }
+    ]
+  },
+  {
+    "slug": "research",
+    "nombre": "Research",
+    "division": "R&D",
+    "regimen": "frio",
+    "aliases": [
+      "r&d"
+    ],
+    "asientos": [
+      {
+        "rol": "Explorer",
+        "modelo": "qwen3:32b (explorer-reason)",
+        "tier": "oss",
+        "agente": "research-explorer"
+      }
+    ]
+  }
+]

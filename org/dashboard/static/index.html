@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PUPPET AI · MISSION CONTROL</title>
+<link rel="stylesheet" href="/static/css/main.css">
+<link rel="stylesheet" href="/static/css/panels.css">
+<!-- skill despacho-retro-rpg: display + cuerpo pixel; offline degrada a monospace -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap">
+<link rel="stylesheet" href="/static/css/despacho.css">
+<!-- skin RPG de TODO el shell (override aditivo: borrar este link revierte) -->
+<link rel="stylesheet" href="/static/css/rpg-shell.css">
+<script type="module" src="/static/js/main.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="brand">PUPPET AI · <span>MISSION CONTROL</span></div>
+  <div id="counters">
+    <span class="ctr">🟡 listo <b id="n-ready">–</b></span>
+    <span class="ctr">🟢 processing <b id="n-proc">–</b></span>
+    <span class="ctr">✅ hoy <b id="n-done">–</b></span>
+    <span class="ctr">⚙ working <b id="n-work">–</b></span>
+  </div>
+  <button id="player-toggle" class="hbtn" type="button"
+  title="MODO JUGADOR: camina la oficina con flechas/WASD · habla con [Espacio] · Esc vuelve al mando">🎮 MANDO</button>
+<button id="sound-toggle" class="hbtn" type="button" title="sonido (WebAudio, off por defecto)">🔇</button>
+  <button id="overlay-eff-toggle" class="hbtn" type="button" title="heatmap de actividad (lane gateway)">🌡</button>
+  <button id="fire-alarm-btn" class="hbtn hbtn-alarm" type="button" title="alarma: pausa TODO el org">🚨</button>
+  <div id="clock">--:--:--</div>
+</header>
+
+<div id="paused-banner" hidden>
+  🚨 ORG EN PAUSA — pausa dura: lane gateway · advisory: lane tools (protocolo).
+  Reanudación: draft <code>reanudar_org</code> aplicado por el Supervisor.
+</div>
+
+<div id="app">
+  <nav id="sidebar">
+    <button class="navbtn active" data-view="oficina" type="button"><span class="ico">🏢</span> Oficina</button>
+    <button class="navbtn" data-view="guerra" type="button"><span class="ico">🗺</span> Sala de Guerra</button>
+    <button class="navbtn" data-view="armeria" type="button"><span class="ico">🛡</span> Armería</button>
+    <button class="navbtn" data-view="biblioteca" type="button"><span class="ico">📚</span> Biblioteca</button>
+    <button class="navbtn" data-view="pipeline" type="button"><span class="ico">📋</span> Pipeline</button>
+    <button class="navbtn" data-view="canal" type="button"><span class="ico">💬</span> Canal</button>
+    <button class="navbtn" data-view="squads" type="button"><span class="ico">👥</span> Squads</button>
+    <button class="navbtn" data-view="estado" type="button"><span class="ico">📊</span> Estado</button>
+    <div class="foot">escrituras: composer → inbox/<br>acciones → drafts de comando<br>(los ejecuta el Supervisor)</div>
+  </nav>
+
+  <div id="views">
+    <section class="view active" id="view-oficina">
+      <div id="legend">
+        <span><span class="leg-dot" style="background:var(--green)"></span>working</span>
+        <span><span class="leg-dot" style="background:var(--amber)"></span>idle (deambula)</span>
+        <span style="letter-spacing:1px">zzZ frío</span>
+        <span><span class="leg-dot" style="background:var(--gold)"></span>fable</span>
+        <span><span class="leg-dot" style="background:var(--opus)"></span>opus</span>
+        <span><span class="leg-dot" style="background:var(--sonnet)"></span>sonnet</span>
+        <span><span class="leg-dot" style="background:var(--oss)"></span>oss</span>
+        <span>✗ rechazo real · ! alerta real · 🛏 cuarentena</span>
+        <span style="color:#6f675d">click muñequito = carta · click Lead = chat · escritorio ✉ = founder · arrastra items de la armería</span>
+      </div>
+      <div id="stage-wrap"><div id="stage">
+        <canvas id="office" width="992" height="640"></canvas>
+        <div id="overlay"></div>
+        <div id="tooltip"></div>
+      </div></div>
+    </section>
+
+    <section class="view" id="view-guerra">
+      <div id="war-wrap">
+        <div id="war-board-wrap"><canvas id="war-board" width="960" height="520"></canvas></div>
+        <aside id="war-side"><div class="nodata">sin datos</div></aside>
+      </div>
+    </section>
+
+    <section class="view" id="view-armeria">
+      <div id="armeria-root"><div class="nodata">sin datos</div></div>
+    </section>
+
+    <section class="view" id="view-biblioteca">
+      <div id="biblioteca-root"><div class="nodata">sin datos</div></div>
+    </section>
+
+    <section class="view" id="view-pipeline">
+      <div class="kanban">
+        <div class="pcol"><h3>📥 inbox <b id="p-inbox"></b></h3><div class="cards" id="cards-inbox"><div class="nodata">sin datos</div></div></div>
+        <div class="pcol"><h3>⚙ processing <b id="p-proc"></b></h3><div class="cards" id="cards-processing"><div class="nodata">sin datos</div></div></div>
+        <div class="pcol"><h3>✅ completed <b id="p-comp"></b></h3><div class="cards" id="cards-completed"><div class="nodata">sin datos</div></div></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-canal">
+      <div class="chan-head"><b>#org-puppet-ai</b><span class="sub"><span id="chan-working">–</span> squads working</span></div>
+      <div id="feed"><div class="nodata">sin datos</div></div>
+      <form id="composer">
+        <input id="composer-in" type="text" maxlength="1000" autocomplete="off"
+          placeholder="mision: <qué hay que hacer>   — igual que por Telegram">
+        <button type="submit">ENVIAR ▸</button>
+      </form>
+      <div class="composer-hint">con «mision:» se crea un draft real en missions/inbox/ (origen: dashboard) para el Supervisor; el resto es charla sin efectos</div>
+    </section>
+
+    <section class="view" id="view-squads">
+      <div id="squads-grid"><div class="nodata">sin datos</div></div>
+    </section>
+
+    <section class="view" id="view-estado">
+      <div class="est-row">
+        <div class="est-big"><div class="n" id="e-ready">–</div><div class="l">🟡 listas</div></div>
+        <div class="est-big"><div class="n" id="e-proc">–</div><div class="l">⚙ processing</div></div>
+        <div class="est-big"><div class="n" id="e-done">–</div><div class="l">✅ completadas hoy</div></div>
+        <div class="est-big"><div class="n" id="e-work">–</div><div class="l">👷 squads working</div></div>
+      </div>
+      <div class="est-box"><h4>Salud del pipeline</h4><div id="e-salud" class="nodata">sin datos</div></div>
+      <div class="est-box"><h4>Cadena wedge M000 → M004</h4><div id="e-chain" class="nodata">sin datos</div></div>
+      <div class="est-box"><h4>Misiones con datos degradados</h4><div id="e-errs" class="nodata">sin datos</div></div>
+      <div class="est-box"><h4>Últimos reportes enviados (outbox → Telegram)</h4><div id="e-reps" class="nodata">sin datos</div></div>
+    </section>
+  </div>
+</div>
+
+<aside id="panel-root"></aside>
+
+<!-- EL DESPACHO DEL FOUNDER: overlay diegético (lo construye panels/despacho.js) -->
+<div id="despacho-ov" hidden></div>
+
+<div id="alarm-modal" hidden>
+  <form id="alarm-form" class="alarm-box">
+    <h3>🚨 ALARMA DE INCENDIO</h3>
+    <p>Esto PAUSA TODO el org de verdad: crea <code>org/PAUSED</code>, emite el evento
+    <code>pausa_org</code> y deja una alerta en <code>reports/outbox</code> (el puente de Telegram
+    la envía si está configurado). Tu orquestador debe respetar <code>org/PAUSED</code>.
+    No hay botón de des-pausa: para reanudar, borra <code>org/PAUSED</code> a mano.</p>
+    <label>Token de alarma (org/dashboard/.alarm-token)
+      <input id="alarm-token" type="password" autocomplete="off">
+    </label>
+    <label>Escribe <b>PAUSAR</b> para confirmar
+      <input id="alarm-confirm" type="text" autocomplete="off">
+    </label>
+    <div id="alarm-result"></div>
+    <div class="alarm-actions">
+      <button type="button" id="alarm-cancel">cancelar</button>
+      <button type="submit" id="alarm-go">ACTIVAR ALARMA</button>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>

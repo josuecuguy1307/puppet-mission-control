@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "type": "stdio"
+    },
+    "search": {
+      "type": "http"
+    }
+  }
+}

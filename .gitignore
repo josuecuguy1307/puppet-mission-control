@@ -1,0 +1,22 @@
+# Runtime files the dashboard creates (never commit them)
+org/dashboard/.alarm-token
+org/PAUSED
+org/founder/despacho-marcas.jsonl
+reports/security.log
+reports/outbox/sent/
+missions/inbox/commands/cmd-*.json
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+.claude/settings.local.json
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# macOS
+.DS_Store

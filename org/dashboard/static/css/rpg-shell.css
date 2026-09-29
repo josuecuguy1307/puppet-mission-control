@@ -1,0 +1,354 @@
+/* MISSION CONTROL v3 — rpg-shell.css · skill despacho-retro-rpg aplicada a TODO
+   el chrome del dashboard (header, nav, las 8 vistas, panel lateral, modales).
+   CAPA DE OVERRIDE ADITIVA: se carga última; borrar este archivo + su <link>
+   revierte el skin completo. Tokens GBA: definidos UNA vez en despacho.css :root.
+   NO toca: el mundo canvas (muñequitos/salas/overlays del mapa: .placa,
+   .room-sign, .obubble, .obadge, #tooltip, #board-ov, #leader-ov), los colores
+   de TIER (fable/opus/sonnet/oss = semántica de datos), ni la capa de datos. */
+
+:root{
+  --f-display: "Press Start 2P", ui-monospace, monospace;
+  --f-cuerpo: "VT323", ui-monospace, monospace;
+}
+
+/* foco RPG en todo el shell */
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible{
+  outline:4px solid var(--oro); outline-offset:0;
+}
+
+/* ---------- barra superior ---------- */
+header{ background:var(--tinta); border-bottom:4px solid var(--sombra) }
+.brand{ font-family:var(--f-display); font-size:11px; line-height:1.8; letter-spacing:0;
+  color:var(--oro) }
+.brand span{ color:var(--papel) }
+.ctr{ color:var(--sombra); font-size:11px }
+.ctr b{ color:var(--papel); font-size:13px }
+#clock{ font-family:var(--f-display); font-size:10px; line-height:1.8; color:var(--oro) }
+.hbtn{ background:var(--papel); border:3px solid var(--tinta); border-radius:0;
+  color:var(--tinta); box-shadow:2px 2px 0 rgba(0,0,0,.35) }
+.hbtn:hover{ border-color:var(--oro) }
+.hbtn.on{ border-color:var(--oro); color:var(--tinta); background:#fff }
+.hbtn-alarm{ border-color:var(--alerta); color:var(--alerta) }
+.hbtn-alarm:hover{ background:#fff; border-color:var(--alerta) }
+#paused-banner{ background:var(--alerta); color:#fff; border-bottom:4px solid var(--tinta);
+  font-family:var(--f-display); font-size:10px; line-height:1.8 }
+#paused-banner code{ color:var(--oro); font-family:inherit }
+
+/* ---------- nav lateral: menú de RPG ---------- */
+#sidebar{ background:var(--tinta); border-right:4px solid var(--sombra) }
+.navbtn{ font-family:var(--f-cuerpo); font-size:19px; line-height:1.2; color:var(--sombra);
+  border:3px solid transparent; border-radius:0; padding:7px 12px; letter-spacing:0 }
+.navbtn:hover{ color:var(--papel); background:none }
+.navbtn:hover::before{ content:"▶"; margin-right:6px; color:var(--alerta);
+  display:inline-block; animation:rebote 1s steps(2, jump-none) infinite }
+.navbtn.active{ color:var(--tinta); background:var(--papel); border-color:var(--tinta);
+  box-shadow:2px 2px 0 rgba(0,0,0,.45) }
+.navbtn.active::before{ content:"▶"; margin-right:6px; color:var(--alerta);
+  display:inline-block; animation:rebote 1s steps(2, jump-none) infinite }
+#sidebar .foot{ color:var(--sombra); font-size:10px }
+
+/* ---------- vista OFICINA: el edificio flota sobre el pasto ---------- */
+#legend{ background:var(--tinta); border-bottom:4px solid var(--sombra); color:var(--sombra) }
+#stage-wrap{
+  background:
+    repeating-linear-gradient(0deg, rgba(120,200,80,.12) 0 2px, transparent 2px 16px),
+    repeating-linear-gradient(90deg, rgba(120,200,80,.12) 0 2px, transparent 2px 16px),
+    var(--fondo);
+}
+#office{ border:4px solid var(--tinta); border-radius:0;
+  box-shadow:6px 6px 0 rgba(0,0,0,.35) }
+
+/* fondo de pueblo para las vistas de contenido */
+#view-pipeline, #view-canal, #view-squads, #view-estado,
+#view-armeria, #view-biblioteca, #view-guerra{
+  background:
+    repeating-linear-gradient(0deg, rgba(120,200,80,.12) 0 2px, transparent 2px 16px),
+    repeating-linear-gradient(90deg, rgba(120,200,80,.12) 0 2px, transparent 2px 16px),
+    var(--fondo);
+}
+
+/* ---------- PIPELINE: kanban como tablones del pueblo ---------- */
+.pcol{ background:rgba(32,36,58,.20); border:4px solid var(--tinta); border-radius:0 }
+.pcol h3{ font-family:var(--f-display); font-size:10px; line-height:1.8; letter-spacing:0;
+  color:var(--papel) }
+.pcol h3 b{ color:var(--oro) }
+.card{
+  background:var(--papel); color:var(--tinta); border:3px solid var(--tinta); border-radius:0;
+  box-shadow:2px 2px 0 rgba(0,0,0,.4); transform:none;
+  font-family:var(--f-cuerpo); font-size:17px; line-height:1.25; padding:8px 10px;
+}
+.card:nth-child(2n){ transform:none }   /* regla Chanel: fuera las rotaciones */
+.card.col-processing{ background:#fff; border-color:var(--cielo) }
+.card.col-completed{ border-color:var(--hierba) }
+.card.st-blocked{ border-color:var(--sombra); background:var(--papel) }
+.card-top b{ font-size:18px }
+.card .lane{ font-family:ui-monospace,monospace; font-size:9px; background:var(--tinta);
+  color:var(--papel); border-radius:0 }
+.card .csq{ color:var(--tinta); opacity:.7; font-size:14px }  /* AA: cielo chico no llega */
+.card-lock{ color:var(--alerta) }
+.card-dep{ color:var(--hierba); font-size:14px }
+.card-tit{ color:var(--tinta); opacity:.8; font-size:15px }
+
+/* ---------- CANAL: mensajes como cajas de diálogo ---------- */
+.chan-head{ background:var(--tinta); border-bottom:4px solid var(--sombra); color:var(--papel) }
+.chan-head .sub{ color:var(--sombra) }
+.msg{
+  background:var(--papel); color:var(--tinta); border:3px solid var(--tinta); border-radius:0;
+  box-shadow:2px 2px 0 rgba(0,0,0,.4); font-family:var(--f-cuerpo); font-size:17px;
+  line-height:1.3;
+}
+.msg.tipo-vos{ background:var(--tinta); color:var(--papel); border-color:var(--sombra) }
+.msg.tipo-alerta{ border-left:8px solid var(--alerta) }
+.msg.tipo-org{ border-left:8px solid var(--oro) }
+.msg .time{ color:inherit; opacity:.6 }
+.msg .squadtag{ color:var(--tinta); opacity:.65 }
+.badge{ border-radius:0; font-family:ui-monospace,monospace }
+#composer{ background:var(--tinta); border-top:4px solid var(--sombra) }
+#composer input{ background:var(--papel); border:3px solid var(--tinta); border-radius:0;
+  color:var(--tinta); font-family:var(--f-cuerpo); font-size:18px }
+#composer input:focus{ border-color:var(--oro) }
+#composer button{ background:var(--papel); border:3px solid var(--tinta); border-radius:0;
+  color:var(--tinta); font-family:var(--f-display); font-size:10px; line-height:1.8 }
+#composer button:hover{ filter:none; border-color:var(--oro) }
+.composer-hint{ background:var(--tinta); color:var(--sombra) }
+
+/* ---------- SQUADS: fichas de gremio ---------- */
+.sq-card{ background:var(--papel); border:4px solid var(--tinta); border-radius:0;
+  box-shadow:inset 0 0 0 2px var(--papel), inset 0 0 0 4px var(--sombra),
+             4px 4px 0 rgba(0,0,0,.35); color:var(--tinta) }
+.sq-card h4{ color:var(--tinta); font-family:var(--f-cuerpo); font-size:20px }
+.sq-card h4 .fmark{ color:var(--oro); text-shadow:1px 1px 0 var(--tinta) }
+.sq-seat{ color:var(--tinta) }
+.sq-missions{ color:var(--tinta); opacity:.85; border-top:2px dashed var(--sombra) }
+.sq-missions b{ color:var(--cielo) }
+.chip{ border-radius:0; font-family:ui-monospace,monospace }
+
+/* ---------- ESTADO: contadores arcade + cajas ---------- */
+.est-big{ background:var(--papel); border:4px solid var(--tinta); border-radius:0;
+  box-shadow:4px 4px 0 rgba(0,0,0,.35) }
+.est-big .n{ font-family:var(--f-display); font-size:18px; line-height:1.8; color:var(--tinta) }
+.est-big .l{ color:var(--tinta); opacity:.7 }
+.est-box{ background:var(--papel); border:4px solid var(--tinta); border-radius:0;
+  box-shadow:4px 4px 0 rgba(0,0,0,.35); color:var(--tinta) }
+.est-box h4{ font-family:var(--f-display); font-size:10px; line-height:1.8; letter-spacing:0;
+  color:var(--tinta) }
+.est-line{ color:var(--tinta); font-family:var(--f-cuerpo); font-size:17px }
+.map-node{ border-radius:0; border-width:2px; color:var(--tinta); font-family:var(--f-cuerpo);
+  font-size:16px }
+.map-node.st-completed{ border-color:var(--hierba); color:var(--tinta); background:#fff }
+.map-node.st-processing{ border-color:var(--cielo); color:var(--tinta); background:#fff }
+.map-node.st-ready{ border-color:var(--oro); color:var(--tinta); background:#fff }
+.map-node.st-blocked{ border-color:var(--sombra); color:var(--tinta) }
+.map-arrow{ color:var(--tinta); opacity:.5 }
+.st-ready{ background:var(--oro); color:var(--tinta) }
+.st-blocked{ background:var(--sombra); color:var(--tinta) }
+.st-processing{ background:var(--cielo); color:#fff }
+.st-completed{ background:var(--hierba); color:var(--tinta) }
+.st-sin-datos, .st-roto, .st-ciclo, .st-founder-roto{ background:var(--alerta); color:#fff }
+.st-blocked-on-founder{ background:var(--tinta); color:var(--oro) }
+.est-line .st{ border-radius:0; font-family:ui-monospace,monospace; font-size:9px }
+.rep{ background:var(--papel); color:var(--tinta); border:3px solid var(--tinta);
+  border-radius:0; box-shadow:2px 2px 0 rgba(0,0,0,.4);
+  font-family:var(--f-cuerpo); font-size:17px; line-height:1.3 }
+.nodata{ color:var(--sombra) }
+
+/* ---------- SALA DE GUERRA: tablero enmarcado + lista como pergaminos ---------- */
+#war-board-wrap{ background:var(--tinta); border:4px solid var(--tinta); border-radius:0 }
+#war-side{ background:var(--papel); border:4px solid var(--tinta); border-radius:0;
+  box-shadow:4px 4px 0 rgba(0,0,0,.35); color:var(--tinta) }
+#war-side .war-h{ font-family:var(--f-display); font-size:11px; line-height:1.8;
+  letter-spacing:0; color:var(--tinta) }
+#war-side h5{ color:var(--tinta); opacity:.7 }
+.war-leyenda .war-leg{ color:var(--tinta); opacity:.8; font-size:12px }
+.war-cc-chain{ color:var(--tinta); background:#fff; border:3px solid var(--oro);
+  border-radius:0; font-family:var(--f-cuerpo); font-size:16px }
+.war-nodo{ background:#fff; border:2px solid var(--sombra); border-radius:0;
+  color:var(--tinta); font-family:var(--f-cuerpo); font-size:16px }
+.war-nodo.war-critico{ border-color:var(--oro) }
+.war-sq{ color:var(--tinta); opacity:.7 }
+.war-espera{ color:var(--alerta) }
+.war-tit{ color:var(--tinta); opacity:.7 }
+.war-st-ready{ box-shadow:inset 4px 0 0 var(--oro) }
+.war-st-processing{ box-shadow:inset 4px 0 0 var(--cielo) }
+.war-st-completed{ box-shadow:inset 4px 0 0 var(--hierba); opacity:.8 }
+.war-st-blocked{ box-shadow:inset 4px 0 0 var(--sombra) }
+.war-st-blocked-on-founder{ box-shadow:inset 4px 0 0 var(--tinta) }
+.war-st-roto, .war-st-ciclo, .war-st-founder-roto{ box-shadow:inset 4px 0 0 var(--alerta) }
+.war-nota{ color:var(--tinta); opacity:.6 }
+
+/* ---------- ARMERÍA: vitrinas ---------- */
+.arm-head h3{ font-family:var(--f-display); font-size:12px; line-height:1.8;
+  letter-spacing:0; color:var(--papel); text-shadow:2px 2px 0 var(--tinta) }
+.arm-sub{ color:var(--papel) }
+.arm-nota{ color:var(--papel); opacity:.75 }
+.arm-warn{ color:#fff; background:var(--alerta); border-left:8px solid var(--tinta);
+  border-radius:0; font-family:var(--f-cuerpo); font-size:16px }
+.arm-item{ background:var(--papel); border:4px solid var(--tinta); border-radius:0;
+  box-shadow:inset 0 0 0 2px var(--papel), inset 0 0 0 4px var(--sombra),
+             4px 4px 0 rgba(0,0,0,.35); color:var(--tinta) }
+.arm-item.equipable{ border-color:var(--tinta) }
+.arm-item.equipable:hover{ border-color:var(--oro) }
+.arm-item.sensible{ box-shadow:inset 8px 0 0 var(--alerta), 4px 4px 0 rgba(0,0,0,.35) }
+.arm-sprite{ border:3px solid var(--tinta); border-radius:0 }
+.arm-nombre{ color:var(--tinta); font-family:var(--f-cuerpo); font-size:19px }
+.arm-id{ color:var(--tinta); opacity:.6 }
+.arm-aliases{ color:var(--cielo) }
+.arm-eq{ color:var(--tinta); opacity:.85 }
+.arm-belts h4{ color:var(--papel) }
+.arm-belt-row{ color:var(--papel); font-family:var(--f-cuerpo); font-size:17px }
+.arm-belt-n{ color:var(--sombra) }
+
+/* ---------- BIBLIOTECA (búsqueda) ---------- */
+.bib-q{ background:var(--papel); border:3px solid var(--tinta); border-radius:0;
+  color:var(--tinta); font-family:var(--f-cuerpo); font-size:18px }
+.bib-q:focus{ border-color:var(--oro) }
+.bib-form button{ font-family:var(--f-display) }
+.bib-res{ color:var(--papel) }
+.bib-item{ background:var(--papel); border:3px solid var(--tinta); border-radius:0;
+  box-shadow:2px 2px 0 rgba(0,0,0,.4); color:var(--tinta) }
+.bib-path{ color:var(--cielo); font-family:var(--f-cuerpo); font-size:19px; font-weight:bold }
+.bib-snip{ color:var(--tinta); opacity:.75; font-size:13px }
+.bib-doc{ background:var(--papel); color:var(--tinta); border:3px solid var(--tinta);
+  border-radius:0; font-family:var(--f-cuerpo); font-size:19px; line-height:1.35 }
+
+/* ---------- panel lateral: menú emergente ---------- */
+#panel-root{ background:var(--tinta); border-left:4px solid var(--sombra);
+  box-shadow:-6px 0 0 rgba(0,0,0,.35) }
+.panel-head{ background:var(--tinta); border-bottom:4px solid var(--sombra);
+  color:var(--oro); font-family:var(--f-display); font-size:10px; line-height:1.8;
+  letter-spacing:0 }
+.panel-close{ background:var(--papel); border:3px solid var(--tinta); border-radius:0;
+  color:var(--tinta) }
+.panel-close:hover{ border-color:var(--alerta); color:var(--alerta) }
+.btn-mc{
+  background:var(--papel); border:3px solid var(--tinta); border-radius:0;
+  color:var(--tinta); font-family:var(--f-display); font-size:10px; line-height:1.8;
+  letter-spacing:0; box-shadow:2px 2px 0 rgba(0,0,0,.45); padding:4px 10px;
+}
+.btn-mc:hover{ filter:none; border-color:var(--oro) }
+.btn-mc:hover::before{ content:"▶"; margin-right:8px; color:var(--alerta);
+  display:inline-block; animation:rebote 1s steps(2, jump-none) infinite }
+.btn-mc:disabled{ opacity:.5; border-color:var(--sombra); box-shadow:none }
+.btn-mc.btn-go{ background:var(--papel); border-color:var(--hierba); color:var(--tinta) }
+.acard-hint{ color:var(--tinta); background:var(--hierba); border-left:8px solid var(--tinta);
+  border-radius:0; font-family:var(--f-cuerpo); font-size:16px }
+.acard-retrato{ border:4px solid var(--tinta); border-radius:0 }
+.acard-nombre{ color:var(--oro) }
+.acard-xpbar{ height:16px; background:var(--papel); border:3px solid var(--tinta);
+  border-radius:0 }
+.acard-xpfill{ background:var(--hierba); transition:width .6s steps(8) }
+.acard-mision{ background:var(--papel); color:var(--tinta); border:2px solid var(--tinta);
+  border-radius:0; font-family:var(--f-cuerpo); font-size:17px }
+.acard-form{ background:transparent; border:2px solid var(--sombra); border-radius:0 }
+.acard-form select,.acard-form input,.acard-form textarea{
+  background:var(--papel); border:3px solid var(--tinta); border-radius:0;
+  color:var(--tinta); font-family:var(--f-cuerpo); font-size:17px }
+.acard-form select:focus,.acard-form input:focus,.acard-form textarea:focus{
+  border-color:var(--oro) }
+.acard-log-pre{ background:var(--tinta); border:2px solid var(--sombra); border-radius:0;
+  color:var(--papel) }
+.chip-tier{ border-radius:0 }
+.chip-belt{ border-radius:0 }
+
+/* founder: bandeja + lector + NPC + diario (panel) */
+.fd-cola h5{ color:var(--sombra); font-family:var(--f-display); font-size:9px;
+  line-height:1.8; letter-spacing:0 }
+.fd-item{ background:var(--papel); border:3px solid var(--tinta); border-radius:0;
+  color:var(--tinta); box-shadow:2px 2px 0 rgba(0,0,0,.45);
+  font-family:var(--f-cuerpo); font-size:18px }
+.fd-item:hover{ border-color:var(--oro) }
+.fd-estado{ border-radius:0; font-family:ui-monospace,monospace }
+.fd-e-abierto{ background:var(--oro); color:var(--tinta) }
+.fd-e-respondido{ background:var(--hierba); color:var(--tinta) }
+.fd-e-leido{ background:var(--sombra); color:var(--tinta) }
+.fd-meta{ color:var(--tinta); opacity:.6 }
+.fd-nota{ color:var(--sombra) }
+.fd-titulo{ color:var(--oro); font-family:var(--f-cuerpo); font-size:22px }
+.fd-tldr,.fd-doc{ background:var(--papel); color:var(--tinta); border:3px solid var(--tinta);
+  border-radius:0; box-shadow:inset 0 0 0 2px var(--papel), inset 0 0 0 4px var(--sombra);
+  font-family:var(--f-cuerpo); font-size:19px; line-height:1.35 }
+.fd-default{ color:var(--tinta); background:var(--oro); border-left:8px solid var(--tinta);
+  border-radius:0; font-family:var(--f-cuerpo); font-size:16px }
+.fd-dg-l{ color:var(--sombra) }
+.fd-dg-v{ color:var(--oro); font-family:var(--f-display); font-size:11px; line-height:1.8 }
+.npc-retrato{ border:3px solid var(--tinta); border-radius:0 }
+.npc-log{ background:var(--tinta); border:2px solid var(--sombra); border-radius:0 }
+.npc-msg{ border-radius:0; font-family:var(--f-cuerpo); font-size:17px; line-height:1.25 }
+.npc-lead{ background:var(--papel); color:var(--tinta); border:3px solid var(--tinta);
+  box-shadow:2px 2px 0 rgba(0,0,0,.5) }
+.npc-me{ background:var(--cielo); color:#fff; border:3px solid var(--tinta) }
+.npc-me.npc-draft{ opacity:.75; border-style:dashed; border-color:var(--papel) }
+.npc-form input{ background:var(--papel); border:3px solid var(--tinta); border-radius:0;
+  color:var(--tinta); font-family:var(--f-cuerpo); font-size:18px }
+.npc-form input:focus{ border-color:var(--oro) }
+
+/* juice: toast de logro + leaderboard */
+.juice-toast{
+  background:var(--papel); border:4px solid var(--hierba); color:var(--tinta);
+  border-radius:0; box-shadow:4px 4px 0 rgba(0,0,0,.45);
+  font-family:var(--f-display); font-size:10px; line-height:1.8;
+  animation:juicein 4.5s steps(8) forwards;
+}
+.lb-rank{ color:var(--oro); font-family:var(--f-display); font-size:10px; line-height:1.8 }
+.lb-nivel{ color:var(--sombra) }
+.lb-bar{ background:var(--papel); border:2px solid var(--tinta); border-radius:0 }
+.lb-fill{ background:var(--hierba) }
+
+/* ---------- modal de alarma: caja de PELIGRO ---------- */
+.alarm-box{ background:var(--papel); border:4px solid var(--alerta); border-radius:0;
+  box-shadow:inset 0 0 0 2px var(--papel), inset 0 0 0 4px var(--sombra),
+             6px 6px 0 rgba(0,0,0,.45); color:var(--tinta) }
+.alarm-box h3{ color:var(--alerta); font-family:var(--f-display); font-size:12px;
+  line-height:1.8; letter-spacing:0 }
+.alarm-box p{ color:var(--tinta); font-family:var(--f-cuerpo); font-size:17px; line-height:1.3 }
+.alarm-box code{ color:var(--tinta); background:var(--oro); padding:0 4px; font-family:inherit }
+.alarm-box label{ color:var(--tinta) }
+.alarm-box input{ background:#fff; border:3px solid var(--tinta); border-radius:0;
+  color:var(--tinta); font-family:var(--f-cuerpo); font-size:18px }
+.alarm-box input:focus{ border-color:var(--alerta) }
+#alarm-result{ color:var(--alerta); font-family:var(--f-cuerpo); font-size:16px }
+#alarm-cancel{ background:var(--papel); border:3px solid var(--sombra); border-radius:0;
+  color:var(--tinta); font-family:var(--f-display); font-size:10px; line-height:1.8 }
+#alarm-go{ background:var(--alerta); border:3px solid var(--tinta); border-radius:0;
+  color:#fff; font-family:var(--f-display); font-size:10px; line-height:1.8 }
+#alarm-go:hover{ filter:none; box-shadow:2px 2px 0 var(--tinta) }
+
+/* ---------- MODO JUGADOR (engine/player.js) ---------- */
+#player-cv{
+  position:absolute; left:4px; top:4px;            /* alineado al content-box de #office (borde 4px) */
+  width:calc(100% - 8px); height:calc(100% - 8px);
+  pointer-events:none; image-rendering:pixelated; image-rendering:crisp-edges;
+  z-index:4;                                        /* sobre el mundo, bajo placas (5) y tooltip (50) */
+}
+#player-cv.player-bump{ animation:playerbump .16s steps(2) }
+@keyframes playerbump{ 0%{transform:translateX(0)} 50%{transform:translateX(-3px)} 100%{transform:translateX(0)} }
+#player-a{
+  position:absolute; transform:translate(-50%,-100%); z-index:8;
+  font-family:var(--f-display); font-size:10px; line-height:1.8;
+  background:var(--papel); color:var(--tinta); border:3px solid var(--tinta);
+  box-shadow:2px 2px 0 rgba(0,0,0,.45); padding:0 6px;
+  animation:rebote-a .8s steps(2, jump-none) infinite; pointer-events:none;
+}
+@keyframes rebote-a{ from{ margin-top:0 } to{ margin-top:-4px } }
+#player-dlg{
+  position:absolute; left:50%; bottom:12px; transform:translateX(-50%);
+  width:min(640px, 92%); z-index:30;
+  background:var(--papel); color:var(--tinta); border:4px solid var(--tinta);
+  box-shadow:inset 0 0 0 2px var(--papel), inset 0 0 0 4px var(--sombra),
+             4px 4px 0 rgba(0,0,0,.45);
+  padding:10px 14px; font-family:var(--f-cuerpo); font-size:19px; line-height:1.3;
+}
+#player-dlg[hidden]{ display:none }
+#player-dlg b{ display:block; font-family:var(--f-display); font-size:10px;
+  line-height:1.8; margin-bottom:4px; color:var(--tinta) }
+#player-dlg.peligro{ border-color:var(--alerta) }
+#player-dlg.peligro b{ color:var(--alerta) }
+#player-toggle.on{ background:var(--oro); border-color:var(--tinta); color:var(--tinta) }
+
+@media (prefers-reduced-motion: reduce){
+  .navbtn:hover::before, .navbtn.active::before, .btn-mc:hover::before{ animation:none }
+  .juice-toast{ animation:none }
+  .acard-xpfill{ transition:none }
+  #player-a{ animation:none }
+  #player-cv.player-bump{ animation:none }
+}
